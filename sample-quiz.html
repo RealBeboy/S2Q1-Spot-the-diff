@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Video Quiz</title>
+<style>
+body {
+  font-family: sans-serif;
+}
+#quiz {
+  margin-top: 20px;
+}
+</style>
+</head>
+<body>
+
+<h2>Watch the Video and Answer the Questions</h2>
+
+<video width="640" height="360" controls>
+  <source src="EASY.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<div id="quiz" style="display:none;">
+  <h3>Quiz:</h3>
+  <form id="quizForm">
+    <p>Question 1: What color shirt is the main character wearing?</p>
+    <input type="radio" name="q1" value="red"> Red<br>
+    <input type="radio" name="q1" value="blue"> Blue<br>
+    <input type="radio" name="q1" value="green"> Green<br>
+
+    <p>Question 2: What object is prominently featured in the background?</p>
+    <input type="radio" name="q2" value="tree"> Tree<br>
+    <input type="radio" name="q2" value="building"> Building<br>
+    <input type="radio" name="q2" value="car"> Car<br>
+
+    <button type="submit">Submit</button>
+  </form>
+  <div id="results"></div>
+</div>
+
+<script>
+const video = document.querySelector('video');
+const quiz = document.getElementById('quiz');
+video.addEventListener('ended', () => {
+  quiz.style.display = 'block';
+});
+
+const quizForm = document.getElementById('quizForm');
+quizForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  let score = 0;
+  // Replace these with the correct answers from your video.
+  if (document.querySelector('input[name="q1"]:checked').value === "blue") score++;
+  if (document.querySelector('input[name="q2"]:checked').value === "building") score++;
+  document.getElementById('results').textContent = "You scored " + score + " out of 2!";
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Spot the Difference Game</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: sans-serif;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.video-section {
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    overflow: hidden;
+    margin-bottom: 20px;
+    background: #f0f0f0;
+    border-radius: 8px;
+}
+
+.video-wrapper video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+}
+
+.difficulty-label {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .difficulty-label {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+}
+
+.easy { background-color: #4CAF50; }
+.medium { background-color: #FFA726; }
+.hard { background-color: #E53935; }
+
+.question {
+    margin: 15px 0;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.question p {
+    margin-bottom: 10px;
+}
+
+.question input[type="radio"] {
+    margin: 8px 0;
+}
+
+#submitContainer {
+    text-align: center;
+    margin-top: 20px;
+    display: none;
+    width: 100%;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+    max-width: 200px;
+}
+
+@media (max-width: 480px) {
+    button {
+        width: 100%;
+        max-width: none;
+    }
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    overflow-y: auto;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 5px;
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        margin: 2% auto;
+        padding: 15px;
+        width: 95%;
+    }
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}
+
+.answer-section {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f0f8ff;
+    border-radius: 5px;
+}
+
+.answer-image {
+    max-width: 100%;
+    height: auto;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.answer-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.answer-header h4 {
+    margin: 0;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 480px) {
+    .answer-header h4 {
+        font-size: 1rem;
+    }
+}
+
+.answer-description {
+    margin: 10px 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+#finalScore {
+    text-align: center;
+    margin: 20px 0;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>Spot the Difference Game</h2>
+
+    <div class="video-section">
+        <div class="difficulty-label easy">Easy Level</div>
+        <div class="video-wrapper">
+            <video controls id="videoEasy">
+                <source src="EASY.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div id="easyQuestion"></div>
+    </div>
+
+    <div class="video-section">
+        <div class="difficulty-label medium">Medium Level</div>
+        <div class="video-wrapper">
+            <video controls id="videoMedium">
+                <source src="MEDIUM.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div id="mediumQuestion"></div>
+    </div>
+
+    <div class="video-section">
+        <div class="difficulty-label hard">Hard Level</div>
+        <div class="video-wrapper">
+            <video controls id="videoHard">
+                <source src="HARD.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div id="hardQuestion"></div>
+    </div>
+
+    <form id="quizForm">
+        <div id="submitContainer">
+            <button type="submit" id="submitBtn">Submit Answers</button>
+        </div>
+    </form>
+
+    <div id="finalScore"></div>
+</div>
+
+
+<div id="answerModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAnswers()">&times;</span>
+        <h3>Correct Answers</h3>
+        
+        <div class="answer-section">
+            <div class="answer-header">
+                <h4>Easy Level: Water bottle appeared</h4>
+            </div>
+            <img src="easy.png" alt="Water bottle answer" class="answer-image">
+            <p class="answer-description">The water bottle appeared in the background of the scene.</p>
+        </div>
+
+        <div class="answer-section">
+            <div class="answer-header">
+                <h4>Medium Level: Matches</h4>
+            </div>
+            <img src="medium.png" alt="Matches answer" class="answer-image">
+            <p class="answer-description">A set of matches appeared in the scene.</p>
+        </div>
+
+        <div class="answer-section">
+            <div class="answer-header">
+                <h4>Hard Level: 1 Piso Coin</h4>
+            </div>
+            <img src="hard.png" alt="1 Piso coin answer" class="answer-image">
+            <p class="answer-description">A small 1 Piso coin was added to the scene.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+
+const videos = {
+    easy: document.getElementById('videoEasy'),
+    medium: document.getElementById('videoMedium'),
+    hard: document.getElementById('videoHard')
+};
+
+const questionContainers = {
+    easy: document.getElementById('easyQuestion'),
+    medium: document.getElementById('mediumQuestion'),
+    hard: document.getElementById('hardQuestion')
+};
+
+const questions = {
+    easy: `
+        <div class="question">
+            <p><strong>Easy Level:</strong> What changed in the background?</p>
+            <input type="radio" name="q1" value="waterbottle"> Water bottle appeared<br>
+            <input type="radio" name="q1" value="unifrom"> Uniform appeared<br>
+            <input type="radio" name="q1" value="nothing"> Nothing changed <br>
+        </div>
+    `,
+    medium: `
+        <div class="question">
+            <p><strong>Medium Level:</strong> What appeared?</p>
+            <input type="radio" name="q2" value="Glasses"> Glasses<br>
+            <input type="radio" name="q2" value="matches">Matches<br>
+            <input type="radio" name="q2" value="cloth">Cloth<br>
+        </div>
+    `,
+    hard: `
+        <div class="question">
+            <p><strong>Hard Level:</strong> What tiny detail appeared in the scene?</p>
+            <input type="radio" name="q3" value="clayshape"> Changed Shape of a Clay<br>
+            <input type="radio" name="q3" value="clay"> Added more Clay<br>
+            <input type="radio" name="q3" value="piso"> 1 Piso Coin<br>
+        </div>
+    `
+};
+
+let completedVideos = 0;
+
+function checkAllQuestionsAnswered() {
+    const q1 = document.querySelector('input[name="q1"]:checked');
+    const q2 = document.querySelector('input[name="q2"]:checked');
+    const q3 = document.querySelector('input[name="q3"]:checked');
+    
+    if (q1 && q2 && q3) {
+        document.getElementById('submitContainer').style.display = 'block';
+    }
+}
+
+videos.easy.addEventListener('ended', () => {
+    questionContainers.easy.innerHTML = questions.easy;
+    completedVideos++;
+    if (completedVideos === 3) {
+        document.getElementById('submitContainer').style.display = 'block';
+    }
+});
+
+videos.medium.addEventListener('ended', () => {
+    questionContainers.medium.innerHTML = questions.medium;
+    completedVideos++;
+    if (completedVideos === 3) {
+        document.getElementById('submitContainer').style.display = 'block';
+    }
+});
+
+videos.hard.addEventListener('ended', () => {
+    questionContainers.hard.innerHTML = questions.hard;
+    completedVideos++;
+    if (completedVideos === 3) {
+        document.getElementById('submitContainer').style.display = 'block';
+    }
+});
+
+document.addEventListener('change', (event) => {
+    if (event.target.type === 'radio') {
+        checkAllQuestionsAnswered();
+    }
+});
+
+const quizForm = document.getElementById('quizForm');
+quizForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    
+    let score = 0;
+    const correctAnswers = {
+        q1: "waterbottle",
+        q2: "matches",
+        q3: "piso"
+    };
+
+    for (let i = 1; i <= 3; i++) {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected && selected.value === correctAnswers[`q${i}`]) {
+            score++;
+            selected.parentElement.classList.add('correct');
+        }
+    }
+
+    document.getElementById('finalScore').innerHTML = `
+        Your Score: ${score}/3
+        ${score === 3 ? '<br>Perfect Score! Congratulations!' : 
+          score === 2 ? '<br>Great job!' : 
+          score === 1 ? '<br>Good try!' : 
+          '<br>Keep practicing!'}
+        <br><br>
+        <button onclick="showAnswers()" class="show-answers-btn">Show Answers</button>
+    `;
+});
+
+function showAnswers() {
+    document.getElementById('answerModal').style.display = 'block';
+}
+
+function closeAnswers() {
+    document.getElementById('answerModal').style.display = 'none';
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('answerModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+</script>
+</body>
+</html>
