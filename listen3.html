@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hard Listening Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .test-container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-label {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .easy { background-color: #4CAF50; }
+        .medium { background-color: #FFA726; }
+        .hard { background-color: #E53935; }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            min-width: 120px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .answer-container {
+            margin-top: 20px;
+            display: none; /* Hidden by default */
+        }
+
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .correct {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+
+        .incorrect {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+
+        .question-text {
+            font-size: 18px;
+            margin: 15px 0;
+        }
+
+        .radio-option {
+            margin: 10px 0;
+        }
+        
+        #listening-message {
+            color: #666;
+            font-style: italic;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <button onclick="window.location.href='listen1.html'">Easy Test</button>
+        <button onclick="window.location.href='listen2.html'">Medium Test</button>
+        <button onclick="window.location.href='listen3.html'" style="background-color: #666;">Hard Test</button>
+        <button onclick="window.location.href='index.html'" style="background-color: #2196F3;">
+            Back to Spot the Difference
+        </button>
+    </div>
+
+    <div class="test-container">
+        <div class="difficulty-label hard">Hard Level</div>
+        <h2>Technology Conference</h2>
+        <p>Instructions: Listen to the audio completely to see the question</p>
+        <audio id="audio3" controls>
+            <source src="listen3.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    
+        <div class="answer-container" id="questionContainer">
+            <p class="question-text">What will happen after March 15th?</p>
+            <div class="radio-option">
+                <input type="radio" name="q3" value="74">A $3,874<br>
+                <input type="radio" name="q3" value="47">B $3,847<br>
+                <input type="radio" name="q3" value="released">C $3,478<br>
+            </div>
+            <button onclick="checkAnswer()">Submit Answer</button>
+            <div id="feedback" class="feedback"></div>
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('audio3');
+        const questionContainer = document.getElementById('questionContainer');
+        const listeningMessage = document.getElementById('listening-message');
+
+        // Show question only after audio ends
+        audio.addEventListener('ended', function() {
+            questionContainer.style.display = 'block';
+            listeningMessage.style.display = 'none';
+        });
+
+        // Hide question if audio is played again
+        audio.addEventListener('play', function() {
+            questionContainer.style.display = 'none';
+            listeningMessage.style.display = 'block';
+        });
+
+        function checkAnswer() {
+            const selected = document.querySelector('input[name="q3"]:checked');
+            const feedback = document.getElementById('feedback');
+            
+            if (!selected) {
+                feedback.textContent = "Please select an answer";
+                feedback.className = "feedback incorrect";
+                feedback.style.display = "block";
+                return;
+            }
+
+            if (selected.value === "47") {
+                feedback.textContent = "Correct Answer: B) TThe answer is $3,847 because in the passage, when discussing Mr. Anderson's voicemail (the first client mentioned), it specifically states ''...to discuss the blue prints for his renovation project that costs $3,847.'";
+                feedback.className = "feedback correct";
+            } else {
+                feedback.textContent = "Incorrect. Try listening again!";
+                feedback.className = "feedback incorrect";
+            }
+            feedback.style.display = "block";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Easy Listening Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .test-container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-label {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .easy { background-color: #4CAF50; }
+        .medium { background-color: #FFA726; }
+        .hard { background-color: #E53935; }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            min-width: 120px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .answer-container {
+            margin-top: 20px;
+            display: none; /* Hide by default */
+        }
+
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .correct {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+
+        .incorrect {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+
+        .question-text {
+            font-size: 18px;
+            margin: 15px 0;
+        }
+
+        .radio-option {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <button onclick="window.location.href='listen1.html'" style="background-color: #666;">Easy Test</button>
+        <button onclick="window.location.href='listen2.html'">Medium Test</button>
+        <button onclick="window.location.href='listen3.html'">Hard Test</button>
+        <button onclick="window.location.href='index.html'" style="background-color: #2196F3;">
+            Back to Spot the Difference
+        </button>
+    </div>
+
+    <div class="test-container">
+        <div class="difficulty-label easy">Easy Level</div>
+        <h2>Morning Routine</h2>
+        <p>Instructions: Listen to the audio completely before answering the question</p>
+        <audio id="audio1" controls>
+            <source src="listen1.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <p id="listening-message">Please listen to the audio completely...</p>
+        <div id="answerContainer" class="answer-container">
+            <p class="question-text">What time does the speaker wake up?</p>
+            <div class="radio-option">
+                <input type="radio" name="q1" value="6">A. 6:00<br>
+                <input type="radio" name="q1" value="7">B. 7:00<br>
+                <input type="radio" name="q1" value="8">C. 8:00<br>
+            </div>
+            <button onclick="checkAnswer()">Submit Answer</button>
+            <div id="feedback" class="feedback"></div>
+        </div>
+    </div>
+
+    <script>
+        // Get the audio element and answer container
+        const audio = document.getElementById('audio1');
+        const answerContainer = document.getElementById('answerContainer');
+
+        // Listen for the audio ending
+        audio.addEventListener('ended', function() {
+            // Show the question and answer options
+            answerContainer.style.display = 'block';
+        });
+
+        // Reset the answer container when audio starts playing again
+        audio.addEventListener('play', function() {
+            answerContainer.style.display = 'none';
+            // Reset radio buttons
+            document.querySelectorAll('input[name="q1"]').forEach(radio => radio.checked = false);
+            // Hide feedback
+            document.getElementById('feedback').style.display = 'none';
+        });
+
+        function checkAnswer() {
+            const selected = document.querySelector('input[name="q1"]:checked');
+            const feedback = document.getElementById('feedback');
+            
+            if (!selected) {
+                feedback.textContent = "Please select an answer";
+                feedback.className = "feedback incorrect";
+                feedback.style.display = "block";
+                return;
+            }
+
+            if (selected.value === "7") {
+                feedback.textContent = "Correct Answer: B) 7:00 Explanation: The script clearly states 'Every morning, I wake up at seven oclock' - this is directly stated at the beginning of the passage.";
+                feedback.className = "feedback correct";
+            } else {
+                feedback.textContent = "Incorrect. Try listening again!";
+                feedback.className = "feedback incorrect";
+            }
+            feedback.style.display = "block";
+        }
+    </script>
+</body>
+</html>
